@@ -1,1 +1,1 @@
-# jalkapalloseura
+# jalkapalloseura sovellus
