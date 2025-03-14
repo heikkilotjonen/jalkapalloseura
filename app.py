@@ -3,8 +3,6 @@ from flask import Flask
 from flask import redirect, render_template, request
 from werkzeug.security import generate_password_hash
 
-db = sqlite3.connect("database.db")
-db.isolation_level = None
 app = Flask(__name__)
 
 @app.route("/")
@@ -25,8 +23,11 @@ def create():
     password_hash = generate_password_hash(password1)
 
     try:
+        db = sqlite3.connect("database.db")
+        db.isolation_level = None
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
+        db.close()
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
 
