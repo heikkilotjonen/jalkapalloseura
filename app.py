@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session
+from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 import config, forum
 
@@ -24,7 +25,9 @@ def new_notice():
 
 @app.route("/notice/<int:notice_id>")
 def show_notice(notice_id):
-    notice = forum.get_notice(notice_id)
+    connection = get_db_connection()
+    notice = connection.execute('SELECT * FROM notices WHERE id = ?', (notice_id,)).fetchone()
+    connection.close()
     return render_template("notice.html", notice=notice)
 
 @app.route("/login", methods=["GET", "POST"])
