@@ -2,30 +2,49 @@ import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import config
+import config, forum
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    notices = forum.get_notices()
+    return render_template("frontpage.html", notices=notices)
 
-@app.route("/login", methods=["POST"])
+@app.route("/new_notice", methods=["POST"])
+def new_notice():
+    title = request.form["title"]
+    content = request.form["content"]
+    user_id = session["user_id"]
+
+    notice_id = forum.add_notice(title, content, user_id)
+    return redirect("/notice/" + str(notice_id))
+
+@app.route("/notice/<int:notice_id>")
+def show_notice(notice_id):
+    notice = forum.get_notice(notice_id)
+    return render_template("notice.html", notice=notice)
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
+    if request.method =="GET":
+        return render_template("login.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
     with sqlite3.connect("database.db") as db:
         db.isolation_level = None
-        sql = "SELECT password_hash FROM users WHERE username = ?"
+        sql = "SELECT id, password_hash FROM users WHERE username = ?"
         cursor = db.execute(sql, [username])
         result = cursor.fetchone()
 
     if result:
-        password_hash = result[0]
+        user_id, password_hash = result
         if check_password_hash(password_hash, password):
-            session["username"] = username
+            session["user_id"] = user_id
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
