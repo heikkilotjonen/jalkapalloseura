@@ -19,16 +19,54 @@ def new_notice():
     title = request.form["title"]
     content = request.form["content"]
     user_id = session["user_id"]
-
     notice_id = forum.add_notice(title, content, user_id)
     return redirect("/notice/" + str(notice_id))
 
 @app.route("/notice/<int:notice_id>")
 def show_notice(notice_id):
-    connection = get_db_connection()
-    notice = connection.execute('SELECT * FROM notices WHERE id = ?', (notice_id,)).fetchone()
-    connection.close()
-    return render_template("notice.html", notice=notice)
+    notice = forum.get_notice(notice_id)
+    signings = forum.get_signings(notice_id)
+    return render_template("notice.html", notice=notice, signings=signings)
+
+@app.route("/edit/<int:notice_id>", methods=["GET", "POST"])
+def edit_notice(notice_id):
+    notice = forum.get_notice(notice_id)
+
+    if request.method == "GET":
+        return render_template("edit.html", notice=notice)
+
+    if request.method == "POST":
+        content = request.form["content"]
+        forum.update_notice(notice["id"], content)
+        return redirect("/notice/" + str(notice_id))
+
+@app.route("/remove/<int:notice_id>", methods=["GET", "POST"])
+def del_notice(notice_id):
+    notice = forum.get_notice(notice_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", notice=notice)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            forum.remove_notice(notice_id)
+            return redirect("/")
+        else:
+            return redirect("/notice/" + str(notice_id))
+    
+@app.route("/sign_up/<int:notice_id>", methods=["POST"])
+def sign_up(notice_id):
+    user_id = session["user_id"]
+    if not forum.is_user_signed_up(user_id, notice_id):
+        signing_id = forum.add_signing(user_id, notice_id)
+    return redirect("/notice/" + str(notice_id))
+
+@app.route("/del_sign_up/<int:notice_id>", methods=["GET", "POST"])
+def del_sign_up(notice_id):
+    user_id = session["user_id"]
+    signing_id = forum.get_signing(notice_id, user_id)
+    forum.del_signing(signing_id)
+    return redirect("/notice/" + str(notice_id))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -56,7 +94,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    del session["user_id"]
     return redirect("/")
 
 @app.route("/register")
