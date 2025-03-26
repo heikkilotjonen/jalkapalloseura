@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ilmoitus</title>
+</head>
+
+<body>
+  <h1>{{ notice.title }}</h1> <a href="/">Takasisin etusivulle</a>
+  <p>{{ notice.username }}: {{ notice.content }}</p>
+
+  {% if notice.user_id == session.user_id %}
+  <p>
+    <a href="/edit/{{ notice.id }}">Muokkaa</a> |
+    <a href="/remove/{{ notice.id }}">Poista</a>
+  </p>
+  {% endif %}
+
+  {% if session.user_id %}
+  <form action="/sign_up/{{ notice.id }}" method="post">
+    <input type="submit" value="Ilmoittaudu" />
+  </form>
+  <form action="/del_sign_up/{{ notice.id }}" method="post">
+    <input type="submit" value="Poista ilmoittautuminen" />
+  </form>
+  {% endif %}
+
+  <p>Ilmoittautuneet:</p>
+  <ul>
+    {% for signing in signings %}
+      <li>{{ signing.username }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

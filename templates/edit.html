@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Muokkaus</title>
+</head>
+<body>
+  <h1> Muokkaa ilmoitusta</h1>
+  <form action="/edit/{{ notice.id }}" method="post">
+    <p>
+      Ilmoitus:<br />
+      <textarea name="content" rows="5" cols="40">{{ notice.content }}</textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
+<body>

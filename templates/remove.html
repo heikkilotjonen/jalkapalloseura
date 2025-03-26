@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Poisto</title>
+</head>
+
+<body>
+  <h1> Ilmoituksen poisto</h1>
+  <form action="/remove/{{ notice.id }}" method="post">
+    <p>
+      Haluatko varmasti poistaa ilmoituksen?
+    </p>
+    <input type="submit" name="continue" value="Jatka" />
+    <input type="submit" name="cancel" value="Peruuta" />
+  </form>
+<body>

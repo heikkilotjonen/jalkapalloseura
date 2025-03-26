@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Jalkapalloseura</title>
+</head>
+
+<body>
+ <h1>Etusivu</h1>
+ <p>
+   <a href="/login">Kirjaudu sisään <a/>
+   <a href="/register">Luo tunnus <a/>
+   <a href="/logout">Kirjaudu ulos <a/>
+ <p>
+ {% for notice in notices %}
+  <p>
+    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a>
+    <br />
+    {{ notice.total }} ilmoittautunutta
+  </p>
+  <hr />
+  {% endfor %}
+
+  {% if session.user_id %}
+  <h2>Uusi ilmoitus</h2>
+
+  <form action="/new_notice" method="post">
+    <p>
+      Otsikko: <br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Viesti: <br />
+      <textarea name="content" rows="5" cols="40"></textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
+  {% endif %}
+<body>
