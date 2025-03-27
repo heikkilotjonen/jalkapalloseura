@@ -22,7 +22,6 @@ def get_notice(notice_id):
     connection.close()
     return notice
 
-
 def add_notice(title, content, user_id):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -49,6 +48,20 @@ def remove_notice(notice_id):
     connection.commit()
     connection.close()
 
+def search(query):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    sql = """SELECT n.id notice_id,
+                    n.title notice_title,
+                    u.username
+             FROM notices n, users u
+             WHERE u.id = n.user_id AND
+                   n.content LIKE ?
+             ORDER BY n.id DESC"""
+    search = cursor.execute(sql, ["%" + query + "%"])
+    #connection.commit()
+    #connection.close()
+    return search    
 
 def add_signing(user_id, notice_id):
     connection = get_db_connection()

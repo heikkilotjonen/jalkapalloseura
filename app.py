@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, abort
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 import config, forum
@@ -20,6 +20,8 @@ def new_notice():
     content = request.form["content"]
     user_id = session["user_id"]
     notice_id = forum.add_notice(title, content, user_id)
+    if len(title) > 100 or len(content) > 5000:
+        abort(403)
     return redirect("/notice/" + str(notice_id))
 
 @app.route("/notice/<int:notice_id>")
@@ -53,6 +55,12 @@ def del_notice(notice_id):
             return redirect("/")
         else:
             return redirect("/notice/" + str(notice_id))
+        
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = forum.search(query) if query else []
+    return render_template("search.html", query=query, results=results)
     
 @app.route("/sign_up/<int:notice_id>", methods=["POST"])
 def sign_up(notice_id):
