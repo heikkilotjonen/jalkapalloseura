@@ -6,18 +6,30 @@
 </head>
 
 <body>
-  <h1>Käyttäjän {{ user.username }} profiili</h1> <a href="/">Takasisin etusivulle</a>
+  <h1>Käyttäjän {{ user.username }} profiili</h1> 
+  <a href="/">Takaisin etusivulle</a>
 
-  <p>
-    Käyttäjä on ilmoittautunut {{ signings | count }} pelivuoroon
-  </p>
-
+  <h2>Omat ilmoitukset</h2>
   <ul>
-  {% for signing in signings %}
+  {% for notice in own_notices %}
     <li>
-      <a href="/notice/{{ signing.notice_id }}#{{ signing.id }}">
-        {{ signing.notice_title }}
+      <a href="/notice/{{ notice.id }}">
+        {{ notice.title }}
       </a>
     </li>  
   {% endfor %}
   </ul>
+
+  <h2>Käyttäjän ilmoittautumiset</h2>
+
+  <ul>
+  {% for notice in signed_notices %}
+    <li>
+      <a href="/notice/{{ notice.id }}">
+        {{ notice.title }}
+      </a>
+    </li>  
+  {% endfor %}
+  </ul>
+</body>
+</html>

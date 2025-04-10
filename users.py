@@ -21,3 +21,24 @@ def get_signings(user_id):
     search = cursor.execute(sql, [user_id])
     results = search.fetchall()
     return results
+
+def get_own_notices(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    sql = """SELECT n.id, n.title
+             FROM notices n
+             WHERE n.user_id = ?"""
+    search = cursor.execute(sql, [user_id])
+    results = search.fetchall()
+    return results
+
+def get_signed_notices(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    sql = """SELECT n.id, n.title
+             FROM notices n
+             JOIN signings s ON n.id = s.notice_id
+             WHERE s.user_id = ?"""
+    search = cursor.execute(sql, [user_id])
+    results = search.fetchall()
+    return results

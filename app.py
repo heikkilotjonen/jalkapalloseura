@@ -139,5 +139,8 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    signings = users.get_signings(user_id)
-    return render_template("user.html", user=user, signings=signings)
+    
+    own_notices = users.get_own_notices(user_id)
+    signed_notices = users.get_signed_notices(user_id)
+    
+    return render_template("user.html", user=user, own_notices=own_notices, signed_notices=signed_notices)
