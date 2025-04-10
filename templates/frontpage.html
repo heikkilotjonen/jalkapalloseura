@@ -10,7 +10,10 @@
  <p>
    <a href="/login">Kirjaudu sisään <a/> &zwnj;
    <a href="/register">Luo tunnus <a/> &zwnj;
-   <a href="/logout">Kirjaudu ulos <a/>
+   <a href="/logout">Kirjaudu ulos <a/> &zwnj;
+{% if session.user_id %}
+   <a href="/user/{{ session.user_id }}"> Oma profiili </a>
+{% endif %}
  <p>
 
   <form action="/search" method="get">
@@ -40,7 +43,7 @@
   <form action="/new_notice" method="post">
     <p>
       Otsikko:<br />
-      <input type="text" name="title" maxlength="100" />
+      <input type="text" name="title" maxlength="100" required />
     </p>
     <p>
       Viesti:<br />

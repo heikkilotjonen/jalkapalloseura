@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Käyttäjäsivu</title> 
+</head>
+
+<body>
+  <h1>Käyttäjän {{ user.username }} profiili</h1> <a href="/">Takasisin etusivulle</a>
+
+  <p>
+    Käyttäjä on ilmoittautunut {{ signings | count }} pelivuoroon
+  </p>
+
+  <ul>
+  {% for signing in signings %}
+    <li>
+      <a href="/notice/{{ signing.notice_id }}#{{ signing.id }}">
+        {{ signing.notice_title }}
+      </a>
+    </li>  
+  {% endfor %}
+  </ul>

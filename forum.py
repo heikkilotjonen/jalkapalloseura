@@ -20,7 +20,7 @@ def get_notice(notice_id):
     cursor.execute(sql, [notice_id])
     notice = cursor.fetchone()
     connection.close()
-    return notice
+    return notice if notice else None
 
 def add_notice(title, content, user_id):
     connection = get_db_connection()
@@ -56,11 +56,9 @@ def search(query):
                     u.username
              FROM notices n, users u
              WHERE u.id = n.user_id AND
-                   n.content LIKE ?
+                   (n.content LIKE ? OR n.title LIKE ?)
              ORDER BY n.id DESC"""
-    search = cursor.execute(sql, ["%" + query + "%"])
-    #connection.commit()
-    #connection.close()
+    search = cursor.execute(sql, ["%" + query + "%", "%" + query + "%"])
     return search    
 
 def add_signing(user_id, notice_id):
@@ -102,7 +100,7 @@ def get_signing(notice_id, user_id):
     signing_id = cursor.fetchone()
     connection.close()
     if signing_id:
-        return signing_id[0]  # Palautetaan ensimmäinen elementti, joka on id
+        return signing_id[0]  
     else:
         return None
 

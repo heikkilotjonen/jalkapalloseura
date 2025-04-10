@@ -7,7 +7,7 @@
 
 <body>
   <h1>{{ notice.title }}</h1> <a href="/">Takasisin etusivulle</a>
-  <p>{{ notice.username }}: {{ notice.content }}</p>
+  <p> <a href="/user/{{ notice.user_id }}"> {{ notice.username }} </a>: {{ notice.content }}</p>
 
   {% if notice.user_id == session.user_id %}
   <p>

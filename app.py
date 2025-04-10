@@ -3,7 +3,7 @@ from flask import Flask
 from flask import redirect, render_template, request, session, abort
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
-import config, forum
+import config, forum, users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -27,12 +27,16 @@ def new_notice():
 @app.route("/notice/<int:notice_id>")
 def show_notice(notice_id):
     notice = forum.get_notice(notice_id)
+    if not notice:
+        abort(404)
     signings = forum.get_signings(notice_id)
     return render_template("notice.html", notice=notice, signings=signings)
 
 @app.route("/edit/<int:notice_id>", methods=["GET", "POST"])
 def edit_notice(notice_id):
     notice = forum.get_notice(notice_id)
+    if notice["use_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("edit.html", notice=notice)
@@ -102,7 +106,8 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["user_id"]
+    if "user_id" in session:
+        del session["user_id"]
     return redirect("/")
 
 @app.route("/register")
@@ -115,7 +120,7 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
+        return render_template("passworderror.html")
     password_hash = generate_password_hash(password1)
 
     try:
@@ -125,6 +130,14 @@ def create():
         db.execute(sql, [username, password_hash])
         db.close()
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+        return render_template("existingaccount.html")
+    
+    return render_template("created.html")
 
-    return "Tunnus luotu"
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    signings = users.get_signings(user_id)
+    return render_template("user.html", user=user, signings=signings)

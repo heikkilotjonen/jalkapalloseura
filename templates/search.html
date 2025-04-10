@@ -5,10 +5,24 @@
   <title>Haku</title>
 </head>
 
+
 <body>
+ <h1>Haku</h1> <a href="/">Takasisin etusivulle</a>
+   <form action="/search" method="get">
+     <p>
+       Hakusana:
+       {% if query %}
+       <input type="text" name="query" value="{{ query }}" />
+       {% else %}
+       <input type="text" name="query" />
+       {% endif %}
+     </p>
+     <input type="submit" value="Hae" />
+  </form>
+
   {% if query %}
   <hr />
-  <h2>Tulokset</h2> <a href="/">Takasisin etusivulle</a>
+  <h2>Tulokset</h2>
   
   <ul>
   {% for result in results %}
@@ -22,4 +36,7 @@
   {% endfor %}
   </ul>
   {% endif %}
+
+
+
 <body>	
