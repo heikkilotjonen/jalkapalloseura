@@ -3,16 +3,27 @@ from flask import Flask
 from flask import redirect, render_template, request, session, abort
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
-import config, forum, users
+import config, forum, users, math
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 
 @app.route("/")
-def index():
-    notices = forum.get_notices()
-    return render_template("frontpage.html", notices=notices)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    notice_count = forum.notice_count()
+    page_count = math.ceil(notice_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+    
+    notices = forum.get_notices(page, page_size)
+    return render_template("frontpage.html", page=page, page_count = page_count, notices=notices)
 
 @app.route("/new_notice", methods=["POST"])
 def new_notice():

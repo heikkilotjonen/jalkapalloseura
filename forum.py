@@ -1,15 +1,26 @@
 from db import get_db_connection
 
-def get_notices():
+def get_notices(page, page_size):
     connection = get_db_connection()
     sql = """SELECT n.id, n.title, COUNT(s.id) total 
             FROM notices n
             LEFT JOIN signings s ON n.id = s.notice_id
             GROUP BY n.id
-            ORDER BY n.id DESC"""
-    notices = connection.execute(sql).fetchall()
+            ORDER BY n.id DESC
+            LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    notices = connection.execute(sql, [limit, offset]).fetchall()
     connection.close()
     return notices
+
+def notice_count():
+    connection = get_db_connection()
+    sql = "SELECT COUNT(n.id) FROM notices n"
+    search = connection.execute(sql)
+    result = search.fetchone()[0]
+    connection.close()
+    return result
 
 def get_notice(notice_id):
     connection = get_db_connection()
@@ -44,7 +55,9 @@ def remove_notice(notice_id):
     connection = get_db_connection()
     cursor = connection.cursor()
     sql = "DELETE FROM notices WHERE id = ?"
+    sql2 = "DELETE FROM signings WHERE notice_id = ?"
     cursor.execute(sql, [notice_id])
+    cursor.execute(sql2, [notice_id])
     connection.commit()
     connection.close()
 
