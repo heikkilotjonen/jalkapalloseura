@@ -22,11 +22,11 @@
 * Jos ilmoituksia tai ilmoittautumisia on enemmän kuin 20, näkyviä ilmoituksia voi vaihtaa
 
 ## Käynnistysohjeet
-Lataa flask kirjasto:
+Lataa flask kirjasto:\
 $ pip install flask
 
-Luo taulut:
+Luo taulut:\
 $ sqlite3 database.db < schema.sql
 
-Käynnistä sovellus:
+Käynnistä sovellus:\
 $ flask run
