@@ -66,12 +66,14 @@ def search(query):
     cursor = connection.cursor()
     sql = """SELECT n.id notice_id,
                     n.title notice_title,
+                    n.date notice_date,
+                    n.location notice_location,
                     u.username
              FROM notices n, users u
              WHERE u.id = n.user_id AND
-                   (n.content LIKE ? OR n.title LIKE ?)
-             ORDER BY n.id DESC"""
-    search = cursor.execute(sql, ["%" + query + "%", "%" + query + "%"])
+                   (n.content LIKE ? OR n.title LIKE ? OR n.location LIKE ?)
+             ORDER BY n.date DESC"""
+    search = cursor.execute(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%"])
     return search    
 
 def add_signing(user_id, notice_id):
