@@ -20,3 +20,13 @@
 * Käyttäjillä on käyttäjäsivut
 * Käyttäjäsivuilla näkyy mitä ilmoituksia käyttäjä on tehnyt, ja mihin hän on ilmoittautunut
 * Jos ilmoituksia tai ilmoittautumisia on enemmän kuin 20, näkyviä ilmoituksia voi vaihtaa
+
+## Käynnistysohjeet
+Lataa flask kirjasto:
+$ pip install flask
+
+Luo taulut:
+$ sqlite3 database.db < schema.sql
+
+Käynnistä sovellus:
+$ flask run
