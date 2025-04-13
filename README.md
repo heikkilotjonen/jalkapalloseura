@@ -10,7 +10,12 @@
 
 Nykyinen tilanne:
 * Sovellukseen pystyy rekisteröitymään, kirjautumaan ja kirjautumaan ulos
+* Etusivulla näkyy 10 ilmoitusta, jos ilmoituksia on enemmän, sivun voi vaihtaa
 * Ilmoituksia voi julkaista, muokata ja poistaa
+* Ilmoituksissa on otsikko, sijainti, päivämäärä ja tekstikenttä muulle tarkentavalle sisällölle
 * Ilmoituksiin voi ilmoittautua ja ilmoittautumisen poistaa
-* Ilmoituksessa näkyy listä ilmoittautuneista, ja etusivulla ilmoittautuneiden määrä
-* Ilmoituksia voi hakea hakusanoilla
+* Ilmoituksessa näkyy lista ilmoittautuneista, ja etusivulla ilmoittautuneiden määrä
+* Ilmoituksia voi hakea otsikon, sijainnin ja sisällön perusteella
+* Käyttäjillä on käyttäjäsivut
+* Käyttäjäsivuilla näkyy mitä ilmoituksia käyttäjä on tehnyt, ja mihin hän on ilmoittautunut
+* Jos ilmoituksia tai ilmoittautumisia on enemmän kuin 20, näkyviä ilmoituksia voi vaihtaa
