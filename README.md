@@ -29,4 +29,6 @@ Luo taulut:\
 $ sqlite3 database.db < schema.sql
 
 Käynnistä sovellus:\
-$ flask run
+$ flask run\
+
+Liitä saatu ip-osoite selaimesi hakuun.
