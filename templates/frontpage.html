@@ -30,7 +30,7 @@
 
  {% for notice in notices %}
   <p>
-    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a>
+    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
     <br />
     {{ notice.total }} ilmoittautunutta
   </p>
@@ -48,8 +48,10 @@
 
   <form action="/new_notice" method="post">
     <p>
-      Otsikko:<br />
-      <input type="text" name="title" maxlength="100" required />
+       Otsikko: <span style="margin-left: 126px;"></span> Sijainti: <span style="margin-left: 132px;"></span> Päivämäärä:<br />
+      <input type="text" name="title" maxlength="100" required /> <a/> &zwnj;
+      <input type="text" name="location" maxlength="100" required /> <a/> &zwnj;
+      <input type="date" name="date" maxlength="100" required /> <a/>
     </p>
     <p>
       Viesti:<br />

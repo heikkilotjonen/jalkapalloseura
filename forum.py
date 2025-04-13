@@ -2,11 +2,11 @@ from db import get_db_connection
 
 def get_notices(page, page_size):
     connection = get_db_connection()
-    sql = """SELECT n.id, n.title, COUNT(s.id) total 
+    sql = """SELECT n.id, n.title, COUNT(s.id) total, n.location, n.date
             FROM notices n
             LEFT JOIN signings s ON n.id = s.notice_id
             GROUP BY n.id
-            ORDER BY n.id DESC
+            ORDER BY n.date DESC
             LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page - 1)
@@ -25,7 +25,7 @@ def notice_count():
 def get_notice(notice_id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = """SELECT n.id, n.title, n.content, n.user_id, u.username 
+    sql = """SELECT n.id, n.title, n.content, n.user_id, n.date, n.location, u.username 
             FROM notices n, users u 
             WHERE n.user_id = u.id AND n.id = ?"""
     cursor.execute(sql, [notice_id])
@@ -33,21 +33,21 @@ def get_notice(notice_id):
     connection.close()
     return notice if notice else None
 
-def add_notice(title, content, user_id):
+def add_notice(title, content, location, date, user_id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = "INSERT INTO notices (title, content, user_id) VALUES (?, ?, ?)"
-    cursor.execute(sql, [title, content, user_id])
+    sql = "INSERT INTO notices (title, content, location, date, user_id) VALUES (?, ?, ?, ?, ?)"
+    cursor.execute(sql, [title, content, location, date, user_id])
     notice_id = cursor.lastrowid
     connection.commit()
     connection.close()
     return notice_id
 
-def update_notice(notice_id, content):
+def update_notice(notice_id, content, location, date):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = "UPDATE notices SET content = ? WHERE id = ?"
-    cursor.execute(sql, [content, notice_id])
+    sql = "UPDATE notices SET content = ?, location = ?, date = ? WHERE id = ?"
+    cursor.execute(sql, [content, location, date, notice_id])
     connection.commit()
     connection.close()
 

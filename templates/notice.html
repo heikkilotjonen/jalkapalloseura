@@ -3,11 +3,26 @@
 
 <head>
   <title>Ilmoitus</title>
+  <style>
+  .content-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      max-width: 300px;
+    }
+   </style>
 </head>
 
 <body>
-  <h1>{{ notice.title }}</h1> <a href="/">Takasisin etusivulle</a>
-  <p> <a href="/user/{{ notice.user_id }}"> {{ notice.username }} </a>: {{ notice.content }}</p>
+  <h1>{{ notice.title }}</h1> 
+  <a href="/">Takaisin etusivulle </a>
+
+  <p> {{ notice.location}} / {{ notice.date }} </p>
+  <p> <a href="/user/{{ notice.user_id }}"> {{ notice.username }} </a>: </p>
+
+  <div class="content-box">
+    {{ notice.content }}
+  </div>
 
   {% if notice.user_id == session.user_id %}
   <p>

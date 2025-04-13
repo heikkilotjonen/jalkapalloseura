@@ -14,11 +14,19 @@
   {% for notice in own_notices %}
     <li>
       <a href="/notice/{{ notice.id }}">
-        {{ notice.title }}
-      </a>
+        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
+      
     </li>  
   {% endfor %}
   </ul>
+  <div>
+    {% if notice_page > 1 %}
+      <a href="?notice_page={{ notice_page - 1 }}&signed_page={{ signed_page }}">Edellinen</a>
+    {% endif %}
+    {% if notice_page < notice_page_count %}
+      <a href="?notice_page={{ notice_page + 1 }}&signed_page={{ signed_page }}">Seuraava</a>
+    {% endif %}
+  </div>
 
   <h2>Käyttäjän ilmoittautumiset</h2>
 
@@ -26,10 +34,19 @@
   {% for notice in signed_notices %}
     <li>
       <a href="/notice/{{ notice.id }}">
-        {{ notice.title }}
+        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
       </a>
     </li>  
   {% endfor %}
   </ul>
+  <div>
+    {% if signed_page > 1 %}
+      <a href="?notice_page={{ notice_page }}&signed_page={{ signed_page - 1 }}">Edellinen</a>
+    {% endif %}
+    {% if signed_page < signed_page_count %}
+      <a href="?notice_page={{ notice_page }}&signed_page={{ signed_page + 1 }}">Seuraava</a>
+    {% endif %}
+  </div>
+
 </body>
 </html>

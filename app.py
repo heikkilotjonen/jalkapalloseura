@@ -29,8 +29,11 @@ def index(page=1):
 def new_notice():
     title = request.form["title"]
     content = request.form["content"]
+    location = request.form["location"]
+    date = request.form["date"]
     user_id = session["user_id"]
-    notice_id = forum.add_notice(title, content, user_id)
+
+    notice_id = forum.add_notice(title, content, location, date, user_id)
     if len(title) > 100 or len(content) > 5000:
         abort(403)
     return redirect("/notice/" + str(notice_id))
@@ -46,7 +49,7 @@ def show_notice(notice_id):
 @app.route("/edit/<int:notice_id>", methods=["GET", "POST"])
 def edit_notice(notice_id):
     notice = forum.get_notice(notice_id)
-    if notice["use_id"] != session["user_id"]:
+    if notice["user_id"] != session["user_id"]:
         abort(403)
 
     if request.method == "GET":
@@ -54,7 +57,9 @@ def edit_notice(notice_id):
 
     if request.method == "POST":
         content = request.form["content"]
-        forum.update_notice(notice["id"], content)
+        location = request.form["location"]
+        date = request.form["date"]
+        forum.update_notice(notice["id"], content, location, date)
         return redirect("/notice/" + str(notice_id))
 
 @app.route("/remove/<int:notice_id>", methods=["GET", "POST"])
@@ -150,8 +155,20 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
+
+    page_size = 20
+
+    notice_count = users.own_notices_count(user_id)
+    signing_count = users.signed_notices_count(user_id)
     
-    own_notices = users.get_own_notices(user_id)
-    signed_notices = users.get_signed_notices(user_id)
-    
-    return render_template("user.html", user=user, own_notices=own_notices, signed_notices=signed_notices)
+    notice_page_count = math.ceil(notice_count / page_size)
+    signed_page_count = math.ceil(signing_count / page_size)
+
+    notice_page = request.args.get('notice_page', 1, type=int)
+    signed_page = request.args.get('signed_page', 1, type=int)
+
+    own_notices = users.get_own_notices(user_id, (notice_page - 1) * page_size, page_size)
+    signed_notices = users.get_signed_notices(user_id, (signed_page - 1) * page_size, page_size)
+
+    return render_template("user.html", user=user, own_notices=own_notices, signed_notices=signed_notices, notice_page=notice_page, signed_page=signed_page, 
+                           notice_page_count=notice_page_count, signed_page_count=signed_page_count)
