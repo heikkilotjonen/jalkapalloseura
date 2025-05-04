@@ -3,7 +3,7 @@ from flask import Flask
 from flask import redirect, render_template, request, session, abort, flash
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
-import config, forum, users, math, secrets
+import config, forum, users, math, secrets, markupsafe
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -129,34 +129,33 @@ def logout():
         del session["user_id"]
     return redirect("/")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html", filled={})
+    if request.method == "GET":
+        return render_template("register.html", filled={})
+    if request.method == "POST":
+        username = request.form["username"]
+        if len(username) > 16:
+            abort(403)
 
-@app.route("/create", methods=["POST"])
-def create():
-    username = request.form["username"]
-    if len(username) > 16:
-        abort(403)
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
 
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
+        if password1 != password2:
+            flash("VIRHE: Salasanat eivät täsmää")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
+        
+        password_hash = generate_password_hash(password1)
 
-    if password1 != password2:
-        flash("VIRHE: Salasanat eivät täsmää")
-        filled = {"username": username}
-        return redirect("/register", filled = filled)
-    
-    password_hash = generate_password_hash(password1)
-
-    try:
-        users.create_account(username, password_hash)
-    except sqlite3.IntegrityError:
-        flash("VIRHE: Tunnus on jo varattu")
-        filled = {"username": username}
-        return redirect("/register", filled=filled)
-    
-    return render_template("created.html")
+        try:
+            users.create_account(username, password_hash)
+        except sqlite3.IntegrityError:
+            flash("VIRHE: Tunnus on jo varattu")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
+        
+        return render_template("created.html")
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -184,3 +183,9 @@ def show_user(user_id):
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)

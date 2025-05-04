@@ -14,7 +14,7 @@
   {% for notice in own_notices %}
     <li>
       <a href="/notice/{{ notice.id }}">
-        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
+        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}
       
     </li>  
   {% endfor %}
@@ -34,7 +34,7 @@
   {% for notice in signed_notices %}
     <li>
       <a href="/notice/{{ notice.id }}">
-        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
+        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}
       </a>
     </li>  
   {% endfor %}

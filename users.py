@@ -11,7 +11,7 @@ def get_user(user_id):
 def get_own_notices(user_id, offset, page_size):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = """SELECT n.id, n.title, n.date, n.location
+    sql = """SELECT n.id, n.title, n.date, n.location, n.level
              FROM notices n
              WHERE n.user_id = ?
              LIMIT ? OFFSET ?"""
@@ -32,7 +32,7 @@ def own_notices_count(user_id):
 def get_signed_notices(user_id, offset, page_size):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = """SELECT n.id, n.title, n.date, n.location
+    sql = """SELECT n.id, n.title, n.date, n.location, n.level
              FROM notices n
              JOIN signings s ON n.id = s.notice_id
              WHERE s.user_id = ?
@@ -58,7 +58,6 @@ def create_account(username, password_hash):
     sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
     cursor.execute(sql, [username, password_hash])
     connection.commit()  
-    #connection.close() 
 
 def login(username):
     connection = get_db_connection()
