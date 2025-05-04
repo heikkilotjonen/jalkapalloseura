@@ -2,7 +2,7 @@ from db import get_db_connection
 
 def get_notices(page, page_size):
     connection = get_db_connection()
-    sql = """SELECT n.id, n.title, COUNT(s.id) total, n.location, n.date
+    sql = """SELECT n.id, n.level, n.title, COUNT(s.id) total, n.location, n.date
             FROM notices n
             LEFT JOIN signings s ON n.id = s.notice_id
             GROUP BY n.id
@@ -25,7 +25,7 @@ def notice_count():
 def get_notice(notice_id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = """SELECT n.id, n.title, n.content, n.user_id, n.date, n.location, u.username 
+    sql = """SELECT n.id, n.level, n.title, n.content, n.user_id, n.date, n.location, u.username 
             FROM notices n, users u 
             WHERE n.user_id = u.id AND n.id = ?"""
     cursor.execute(sql, [notice_id])
@@ -33,21 +33,21 @@ def get_notice(notice_id):
     connection.close()
     return notice if notice else None
 
-def add_notice(title, content, location, date, user_id):
+def add_notice(title, content, level, location, date, user_id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = "INSERT INTO notices (title, content, location, date, user_id) VALUES (?, ?, ?, ?, ?)"
-    cursor.execute(sql, [title, content, location, date, user_id])
+    sql = "INSERT INTO notices (title, content, level, location, date, user_id) VALUES (?, ?, ?, ?, ?, ?)"
+    cursor.execute(sql, [title, content, level, location, date, user_id])
     notice_id = cursor.lastrowid
     connection.commit()
     connection.close()
     return notice_id
 
-def update_notice(notice_id, content, location, date):
+def update_notice(notice_id, content, level, location, date):
     connection = get_db_connection()
     cursor = connection.cursor()
-    sql = "UPDATE notices SET content = ?, location = ?, date = ? WHERE id = ?"
-    cursor.execute(sql, [content, location, date, notice_id])
+    sql = "UPDATE notices SET content = ?, level = ?, location = ?, date = ? WHERE id = ?"
+    cursor.execute(sql, [content, level, location, date, notice_id])
     connection.commit()
     connection.close()
 
@@ -67,13 +67,14 @@ def search(query):
     sql = """SELECT n.id notice_id,
                     n.title notice_title,
                     n.date notice_date,
+                    n.level notice_level,
                     n.location notice_location,
                     u.username
              FROM notices n, users u
              WHERE u.id = n.user_id AND
-                   (n.content LIKE ? OR n.title LIKE ? OR n.location LIKE ?)
+                   (n.content LIKE ? OR n.title LIKE ? OR n.level LIKE? OR n.location LIKE ?)
              ORDER BY n.date DESC"""
-    search = cursor.execute(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%"])
+    search = cursor.execute(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"])
     return search    
 
 def add_signing(user_id, notice_id):

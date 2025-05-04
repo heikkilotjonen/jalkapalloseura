@@ -1,9 +1,9 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session, abort
+from flask import redirect, render_template, request, session, abort, flash
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
-import config, forum, users, math
+import config, forum, users, math, secrets
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -27,13 +27,15 @@ def index(page=1):
 
 @app.route("/new_notice", methods=["POST"])
 def new_notice():
+    check_csrf()
     title = request.form["title"]
     content = request.form["content"]
+    level = request.form["level"]
     location = request.form["location"]
     date = request.form["date"]
     user_id = session["user_id"]
 
-    notice_id = forum.add_notice(title, content, location, date, user_id)
+    notice_id = forum.add_notice(title, content, level, location, date, user_id)
     if len(title) > 100 or len(content) > 5000:
         abort(403)
     return redirect("/notice/" + str(notice_id))
@@ -41,8 +43,6 @@ def new_notice():
 @app.route("/notice/<int:notice_id>")
 def show_notice(notice_id):
     notice = forum.get_notice(notice_id)
-    if not notice:
-        abort(404)
     signings = forum.get_signings(notice_id)
     return render_template("notice.html", notice=notice, signings=signings)
 
@@ -57,14 +57,17 @@ def edit_notice(notice_id):
 
     if request.method == "POST":
         content = request.form["content"]
+        level = request.form["level"]
         location = request.form["location"]
         date = request.form["date"]
-        forum.update_notice(notice["id"], content, location, date)
+        forum.update_notice(notice["id"], content, level, location, date)
         return redirect("/notice/" + str(notice_id))
 
 @app.route("/remove/<int:notice_id>", methods=["GET", "POST"])
 def del_notice(notice_id):
     notice = forum.get_notice(notice_id)
+    if notice["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("remove.html", notice=notice)
@@ -104,21 +107,21 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-    with sqlite3.connect("database.db") as db:
-        db.isolation_level = None
-        sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        cursor = db.execute(sql, [username])
-        result = cursor.fetchone()
+    result = users.login(username)
 
     if result:
         user_id, password_hash = result
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
+            session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            flash("VIRHE: Väärä tunnus tai salasana")
+            return redirect("/login")
     else:
-        return "VIRHE: väärä tunnus tai salasana"
+        flash("VIRHE: Väärä tunnus tai salasana")
+        return redirect("/login")
 
 @app.route("/logout")
 def logout():
@@ -128,25 +131,30 @@ def logout():
 
 @app.route("/register")
 def register():
-    return render_template("register.html")
+    return render_template("register.html", filled={})
 
 @app.route("/create", methods=["POST"])
 def create():
     username = request.form["username"]
+    if len(username) > 16:
+        abort(403)
+
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
     if password1 != password2:
-        return render_template("passworderror.html")
+        flash("VIRHE: Salasanat eivät täsmää")
+        filled = {"username": username}
+        return redirect("/register", filled = filled)
+    
     password_hash = generate_password_hash(password1)
 
     try:
-        db = sqlite3.connect("database.db")
-        db.isolation_level = None
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-        db.close()
+        users.create_account(username, password_hash)
     except sqlite3.IntegrityError:
-        return render_template("existingaccount.html")
+        flash("VIRHE: Tunnus on jo varattu")
+        filled = {"username": username}
+        return redirect("/register", filled=filled)
     
     return render_template("created.html")
 
@@ -172,3 +180,7 @@ def show_user(user_id):
 
     return render_template("user.html", user=user, own_notices=own_notices, signed_notices=signed_notices, notice_page=notice_page, signed_page=signed_page, 
                            notice_page_count=notice_page_count, signed_page_count=signed_page_count)
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)

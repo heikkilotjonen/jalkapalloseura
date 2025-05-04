@@ -11,8 +11,12 @@
       Ilmoitus: <span style="margin-left: 260px;"></span> Sijainti: <br /> 
       <textarea name="content" rows="5" cols="40">{{ notice.content }}</textarea>
       <textarea name="location" rows="5" cols="40">{{ notice.location }}</textarea> <br /> 
-      Päivämäärä: <br />
+      Päivämäärä: <span style="margin-left: 38px;"></span> Pelintaso:<br />
       <input type="date" name="date" maxlength="100" required /> <a/>
+      <select name="level" required>
+        <option value="Rento">Rento</option>
+        <option value="Kilpailullinen">Kilpailullinen</option>
+    </select>
     </p>
     <input type="submit" value="Lähetä" />
   </form>

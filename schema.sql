@@ -8,8 +8,10 @@ CREATE TABLE notices (
     id INTEGER PRIMARY KEY,
     title TEXT,
     content TEXT,
+    level TEXT,
     location TEXT,
-    date TEXT
+    date TEXT,
+    user_id REFERENCES users
 );
 
 CREATE TABLE signings (

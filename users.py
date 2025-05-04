@@ -51,3 +51,19 @@ def signed_notices_count(user_id):
     search = cursor.execute(sql, [user_id])
     results = search.fetchall()[0][0]
     return results
+
+def create_account(username, password_hash):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+    cursor.execute(sql, [username, password_hash])
+    connection.commit()  
+    #connection.close() 
+
+def login(username):
+    connection = get_db_connection()
+    cursor = connection.cursor()        
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
+    cursor.execute(sql, [username])
+    result = cursor.fetchone()
+    return result

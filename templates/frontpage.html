@@ -30,7 +30,7 @@
 
  {% for notice in notices %}
   <p>
-    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }}
+    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}
     <br />
     {{ notice.total }} ilmoittautunutta
   </p>
@@ -57,8 +57,16 @@
       Viesti:<br />
       <textarea name="content" rows="5" cols="40" maxlength="5000"></textarea>
     </p>
-    <input type="submit" value="Lähetä" />
-  </form>
+    <p>
+      Pelintaso:<br />
+      <select name="level" required>
+        <option value="Rento">Rento</option>
+        <option value="Kilpailullinen">Kilpailullinen</option>
+    </select>
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Lähetä" />
+ </form>
   {% endif %}
 
 <body>
