@@ -1,5 +1,7 @@
-# Jalkapalloseura
+# Pelipaikka
+
 ## Käyttötarkoitus
+
 * Sovelluksessa käyttäjät pystyvät etsimään peliseuraa jalkapalloon. Ilmoituksessa lukee missä ja milloin pelivuoro on.
 * Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 * Käyttäjä pystyy lisäämään ilmoituksia ja muokkaamaan ja poistamaan niitä.
@@ -10,6 +12,7 @@
 * Käyttäjä pystyy ilmoittautumaan pelivuoroon. Ilmoituksessa näytetään, ketkä käyttäjät ovat ilmoittautuneet.
 
 ## Nykyinen tilanne
+
 * Sovellukseen pystyy rekisteröitymään, kirjautumaan ja kirjautumaan ulos
 * Etusivulla näkyy 10 ilmoitusta, jos ilmoituksia on enemmän, sivun voi vaihtaa
 * Ilmoituksia voi julkaista, muokata ja poistaa
@@ -22,13 +25,15 @@
 * Jos ilmoituksia tai ilmoittautumisia on enemmän kuin 20, näkyviä ilmoituksia voi vaihtaa
 
 ## Käynnistysohjeet
-Lataa flask kirjasto:\
+
+Lataa flask kirjasto:  
 $ pip install flask
 
-Luo taulut:\
+Luo taulut:  
 $ sqlite3 database.db < schema.sql
 
-Käynnistä sovellus:\
+Käynnistä sovellus:  
 $ flask run
 
 Liitä saatu ip-osoite selaimesi hakuun.
+
