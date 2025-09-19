@@ -1,0 +1,83 @@
+
+body {
+  max-width: 50em;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: cornsilk;
+  font-family: sans-serif;
+}
+
+.header {
+  background-color: red;
+  color: cornsilk;
+  font-weight: bold;
+  padding: 1em;
+  margin: 0.5em 0;
+  font-family: coda caption;
+}
+
+.nav {
+  background-color: red;
+  color: cornsilk;
+  font-weight: bold;
+  opacity: 1;
+  padding: 0.5em;
+  margin: 0.5em 0;
+}
+
+.nav a {
+  color: cornsilk;  
+}
+
+.content {
+  background-color: cornsilk;
+  color: black;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
+.post {
+  background-color: cornsilk;
+  color: black;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
+.content-box {
+    border: 2px solid #007BFF; 
+    border-radius: 5px; 
+    padding: 1.5em; 
+    margin: 1em 0; 
+    background-color: #f9f9f9; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    font-family: sans-serif;
+}
+
+.info {
+    font-size: 0.9em; 
+    color: #666; 
+    margin-bottom: 1em; 
+}
+
+.info span {
+    margin-right: 0.5em; 
+}
+
+.content-box p {
+    margin: 0.5em 0; 
+}
+
+.edit-links {
+    margin-top: 1em; 
+    font-size: 0.9em; 
+    color: #007BFF; 
+}
+
+.username {
+  font-weight: bold;
+  font-family: Play; 
+  font-size: 1.5em; 
+  margin: 20px 0; 
+  padding: 10px; 
+  border-left: 5px solid red; 
+}

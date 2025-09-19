@@ -3,19 +3,30 @@
 
 <head>
   <title>Käyttäjäsivu</title> 
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
-  <h1>{{ user.username }} </h1> 
-  <a href="/">Takaisin etusivulle</a>
+  <div class="header">
+    <h1> Pelipaikka </h1>
+  </div>
 
-  <h2>Omat ilmoitukset</h2>
+  <div class="nav"> 
+  <a href="/">Takaisin etusivulle </a>
+  </div>
+
+  <div class="username">
+  <h2> Käyttäjän {{ user.username }} profiili </h2> 
+  </div>
+
+<div class="content-box">
+  <h3>Käyttäjän ilmoitukset</h3>
   <ul>
   {% for notice in own_notices %}
     <li>
       <a href="/notice/{{ notice.id }}">
-        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}
-      
+        {{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}    
+
     </li>  
   {% endfor %}
   </ul>
@@ -27,8 +38,10 @@
       <a href="?notice_page={{ notice_page + 1 }}&signed_page={{ signed_page }}">Seuraava</a>
     {% endif %}
   </div>
+</div>  
 
-  <h2>Käyttäjän ilmoittautumiset</h2>
+<div class="content-box">
+  <h3>Käyttäjän ilmoittautumiset</h3>
 
   <ul>
   {% for notice in signed_notices %}
@@ -47,6 +60,6 @@
       <a href="?notice_page={{ notice_page }}&signed_page={{ signed_page + 1 }}">Seuraava</a>
     {% endif %}
   </div>
-
+</div>  
 </body>
 </html>

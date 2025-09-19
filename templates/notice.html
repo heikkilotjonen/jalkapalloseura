@@ -3,35 +3,34 @@
 
 <head>
   <title>Ilmoitus</title>
-  <style>
-  .content-box {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-top: 10px;
-      max-width: 300px;
-    }
-   </style>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
-  <h1>{{ notice.title }}</h1> 
-  <a href="/">Takaisin etusivulle </a>
-
-  <p> {{ notice.location}} / {{ notice.date }} </p>
-  <p> <a href="/user/{{ notice.user_id }}"> {{ notice.username }} </a>: </p>
-  <p> 
-
-  <div class="content-box">
-    {{ notice.content | show_lines }}
+  <div class="header">
+    <h1> Pelipaikka </h1>
   </div>
 
-  <p> Pelintaso: {{ notice.level }} </p>
+  <div class="nav"> 
+  <a href="/">Takaisin etusivulle </a>
+  </div>
+
+  <div class="content-box">
+    <b>{{ notice.title }}</b>
+    <div class="info">
+      <span>{{ notice.location }} / {{ notice.date }}</span>
+      <span> | </span>
+      <span><a href="/user/{{ notice.user_id }}">{{ notice.username }}</a></span>
+    </div>
+    <p>{{ notice.content | show_lines }}</p>
+    <p><b>Pelintaso:</b> {{ notice.level }}</p>
+  </div>
 
   {% if notice.user_id == session.user_id %}
-  <p>
-    <a href="/edit/{{ notice.id }}">Muokkaa</a> |
-    <a href="/remove/{{ notice.id }}">Poista</a>
-  </p>
+    <p class="edit-links">
+      <a href="/edit/{{ notice.id }}">Muokkaa</a> |
+      <a href="/remove/{{ notice.id }}">Poista</a>
+    </p>
   {% endif %}
 
   {% if session.user_id %}
@@ -43,11 +42,14 @@
   </form>
   {% endif %}
 
-  <p>Ilmoittautuneet:</p>
+<div class="content-box">
+  <p><b>Ilmoittautuneet:</b></p>
   <ul>
     {% for signing in signings %}
       <li>{{ signing.username }}</li>
     {% endfor %}
   </ul>
+</div>
+
 </body>
 </html>

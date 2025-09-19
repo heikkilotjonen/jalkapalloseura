@@ -3,47 +3,58 @@
 
 <head>
   <title>Pelipaikka</title>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
- <h1>Pelipaikka</h1>
- <p>
-   <a href="/login">Kirjaudu sisään <a/> &zwnj;
-   <a href="/register">Luo tunnus <a/> &zwnj;
-   <a href="/logout">Kirjaudu ulos <a/> &zwnj;
-{% if session.user_id %}
-   <a href="/user/{{ session.user_id }}"> Oma profiili </a>
-{% endif %}
- <p>
+  <div class="header">
+    <h1>Pelipaikka</h1>
+  </div>
 
-  <form action="/search" method="get">
+  <div class="nav">
+   <p>
+     <a href="/login">Kirjaudu sisään <a/> &zwnj;
+     <a href="/register">Luo tunnus <a/> &zwnj;
+     <a href="/logout">Kirjaudu ulos <a/> &zwnj;
+  {% if session.user_id %}
+     <a href="/user/{{ session.user_id }}"> Oma profiili </a>
+  {% endif %}
+  
+   <p>
+
+    <form action="/search" method="get">
+      <p>
+        Hakusana:
+        {% if query %}
+        <input type="text" name="query" value="{{ query }}" />
+        {% else %}
+        <input type="text" name="query" />
+        {% endif %}
+      </p>
+      <input type="submit" value="Hae" />
+    </form>
+  </div>
+
+  <div class="content">
+  <h2> Ilmoitukset </h2>
+   {% for notice in notices %}
     <p>
-      Hakusana:
-      {% if query %}
-      <input type="text" name="query" value="{{ query }}" />
-      {% else %}
-      <input type="text" name="query" />
-      {% endif %}
+      <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} /   {{ notice.date }} / {{ notice.level }}
+      <br />
+      {{ notice.total }} ilmoittautunutta
     </p>
-    <input type="submit" value="Hae" />
-  </form>
-
- {% for notice in notices %}
-  <p>
-    <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} / {{ notice.date }} / {{ notice.level }}
-    <br />
-    {{ notice.total }} ilmoittautunutta
-  </p>
-  <hr />
-  {% endfor %}
-  <p>
-    <a href="/{{ page - 1 }}">&lt;&lt;</a>
-    Sivu {{ page }}/{{ page_count }}
-    <a href="/{{ page + 1 }}">&gt;&gt;</a>
-  </p>
-  <hr />
+    <hr />
+    {% endfor %}
+    <p>
+      <a href="/{{ page - 1 }}">&lt;&lt;</a>
+      Sivu {{ page }}/{{ page_count }}
+      <a href="/{{ page + 1 }}">&gt;&gt;</a>
+    </p>
+    <hr />
+  </div>
 
   {% if session.user_id %}
+<div class="post">
   <h2>Uusi ilmoitus</h2>
 
   <form action="/new_notice" method="post">
@@ -67,6 +78,7 @@
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Lähetä" />
  </form>
+</div>
   {% endif %}
 
 <body>

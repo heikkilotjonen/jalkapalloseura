@@ -155,7 +155,17 @@ def register():
             filled = {"username": username}
             return render_template("register.html", filled=filled)
         
-        return render_template("created.html")
+        result = users.login(username)  
+
+        if result:
+            user_id, stored_password_hash = result
+            session["user_id"] = user_id
+            session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
+            return redirect("/")  
+        else:
+            flash("VIRHE: Rekisteröinti onnistui, mutta kirjautuminen epäonnistui.")
+            return redirect("/login")
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
