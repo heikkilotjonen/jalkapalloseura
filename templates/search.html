@@ -3,11 +3,21 @@
 
 <head>
   <title>Haku</title>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 
 <body>
- <h1>Haku</h1> <a href="/">Takasisin etusivulle</a>
+  <div class="header">
+    <h1>Pelipaikka</h1>
+  </div>
+
+  <div class="nav"> 
+  <a href="/">Takaisin etusivulle </a>
+  </div>
+
+  <div class="nav"> 
+ <h2>Haku</h2> 
    <form action="/search" method="get">
      <p>
        Hakusana:
@@ -19,8 +29,10 @@
      </p>
      <input type="submit" value="Hae" />
   </form>
+</div>
 
   {% if query %}
+<div class="content"> 
   <hr />
   <h2>Tulokset</h2>
   
@@ -36,7 +48,7 @@
   {% endfor %}
   </ul>
   {% endif %}
-
+</div>
 
 
 <body>	

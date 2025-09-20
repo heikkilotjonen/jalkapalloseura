@@ -3,11 +3,26 @@
 
 <head>
   <title>Rekisteröinti</title>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
-<h1> Luo tunnus </h1>
-<a href="/">Takaisin etusivulle</a>
+  <div class="header">
+    <h1> Pelipaikka </h1>
+  </div>
+
+  <div class="nav"> 
+    <a href="/">Takaisin etusivulle</a>
+  </div>
+
+<h2> Luo tunnus </h2>
+
+  {% if session.user_id %}
+  <p>
+    <b> Olet kirjautunut sisään nimellä {{ session.username }} </b>
+  </p>
+
+{% else %}
 
     {% for message in get_flashed_messages() %}
     <p>
@@ -30,6 +45,8 @@
     </p>
     <input type="submit" value="Luo tunnus" />
   </form>
+
+{% endif %}
 </body>
 
 </html>

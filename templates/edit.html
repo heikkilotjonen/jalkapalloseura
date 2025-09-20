@@ -3,9 +3,20 @@
 
 <head>
   <title>Muokkaus</title>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
+
 <body>
-  <h1> Muokkaa ilmoitusta</h1>
+
+  <div class="header">
+    <h1> Pelipaikka </h1>
+  </div>
+
+  <div class="nav"> 
+  <a href="/">Takaisin etusivulle </a>
+  </div>
+
+  <h2> Muokkaa ilmoitusta</h2>
   <form action="/edit/{{ notice.id }}" method="post">
     <p>
       Ilmoitus: <span style="margin-left: 260px;"></span> Sijainti: <br /> 
