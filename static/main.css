@@ -3,6 +3,7 @@ body {
   max-width: 50em;
   padding: 0;
   box-sizing: border-box;
+  margin: 0 auto;
   background-color: cornsilk;
   font-family: sans-serif;
 }
