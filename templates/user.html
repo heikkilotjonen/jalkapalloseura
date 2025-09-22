@@ -20,7 +20,12 @@
   </div>
 
 <div class="content-box">
-  <h3>Käyttäjän ilmoitukset</h3>
+
+   {% if notice_count != 1 %}
+  <h3>Käyttäjä on tehnyt {{ notice_count }} ilmoitusta</h3>
+   {% else %}
+  <h3>Käyttäjä on tehnyt {{ notice_count }} ilmoituksen</h3>
+   {% endif %}
   <ul>
   {% for notice in own_notices %}
     <li>
@@ -41,8 +46,12 @@
 </div>  
 
 <div class="content-box">
-  <h3>Käyttäjän ilmoittautumiset</h3>
 
+   {% if signing_count != 1 %}
+  <h3>Käyttäjä on tehnyt {{ signing_count }} ilmoittautumista</h3>
+   {% else %}
+  <h3>Käyttäjä on tehnyt {{ signing_count }} ilmoittautumisen</h3>
+   {% endif %}
   <ul>
   {% for notice in signed_notices %}
     <li>

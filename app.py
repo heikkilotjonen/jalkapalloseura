@@ -188,7 +188,7 @@ def show_user(user_id):
     signed_notices = users.get_signed_notices(user_id, (signed_page - 1) * page_size, page_size)
 
     return render_template("user.html", user=user, own_notices=own_notices, signed_notices=signed_notices, notice_page=notice_page, signed_page=signed_page, 
-                           notice_page_count=notice_page_count, signed_page_count=signed_page_count)
+                           notice_page_count=notice_page_count, signed_page_count=signed_page_count, signing_count=signing_count, notice_count=notice_count)
 
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
