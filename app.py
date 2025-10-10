@@ -48,6 +48,7 @@ def show_notice(notice_id):
 
 @app.route("/edit/<int:notice_id>", methods=["GET", "POST"])
 def edit_notice(notice_id):
+    check_csrf()
     notice = forum.get_notice(notice_id)
     if notice["user_id"] != session["user_id"]:
         abort(403)
@@ -65,6 +66,7 @@ def edit_notice(notice_id):
 
 @app.route("/remove/<int:notice_id>", methods=["GET", "POST"])
 def del_notice(notice_id):
+    check_csrf()
     notice = forum.get_notice(notice_id)
     if notice["user_id"] != session["user_id"]:
         abort(403)
@@ -87,6 +89,7 @@ def search():
     
 @app.route("/sign_up/<int:notice_id>", methods=["POST"])
 def sign_up(notice_id):
+    check_csrf()
     user_id = session["user_id"]
     if not forum.is_user_signed_up(user_id, notice_id):
         signing_id = forum.add_signing(user_id, notice_id)
@@ -94,6 +97,7 @@ def sign_up(notice_id):
 
 @app.route("/del_sign_up/<int:notice_id>", methods=["GET", "POST"])
 def del_sign_up(notice_id):
+    check_csrf()
     user_id = session["user_id"]
     signing_id = forum.get_signing(notice_id, user_id)
     forum.del_signing(signing_id)
@@ -131,6 +135,7 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    check_csrf()
     if request.method == "GET":
         return render_template("register.html", filled={})
     if request.method == "POST":

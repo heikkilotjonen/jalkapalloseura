@@ -18,6 +18,7 @@
 
   <h2> Muokkaa ilmoitusta</h2>
   <form action="/edit/{{ notice.id }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <p>
       Ilmoitus: <span style="margin-left: 260px;"></span> Sijainti: <br /> 
       <textarea name="content" rows="5" cols="40">{{ notice.content }}</textarea>
