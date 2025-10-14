@@ -35,9 +35,11 @@
 
   {% if session.user_id %}
   <form action="/sign_up/{{ notice.id }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Ilmoittaudu" />
   </form>
   <form action="/del_sign_up/{{ notice.id }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Poista ilmoittautuminen" />
   </form>
   {% endif %}
