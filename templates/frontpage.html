@@ -35,31 +35,13 @@
     </form>
   </div>
 
-  <div class="content">
-  <h2> Ilmoitukset </h2>
-   {% for notice in notices %}
-    <p>
-      <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} /   {{ notice.date }} / {{ notice.level }}
-      <br />
-      {{ notice.total }} ilmoittautunutta
-    </p>
-    <hr />
-    {% endfor %}
-    <p>
-      <a href="/{{ page - 1 }}">&lt;&lt;</a>
-      Sivu {{ page }}/{{ page_count }}
-      <a href="/{{ page + 1 }}">&gt;&gt;</a>
-    </p>
-    <hr />
-  </div>
-
   {% if session.user_id %}
 <div class="post">
   <h2>Uusi ilmoitus</h2>
 
   <form action="/new_notice" method="post">
     <p>
-       Otsikko: <span style="margin-left: 126px;"></span> Sijainti: <span style="margin-left: 132px;"></span> Päivämäärä:<br />
+       Otsikko: <span style="margin-left: 120px;"></span> Sijainti: <span style="margin-left: 120px;"></span> Päivämäärä:<br />
       <input type="text" name="title" maxlength="100" required /> <a/> &zwnj;
       <input type="text" name="location" maxlength="100" required /> <a/> &zwnj;
       <input type="date" name="date" maxlength="100" required /> <a/>
@@ -80,5 +62,23 @@
  </form>
 </div>
   {% endif %}
+
+  <div class="content">
+  <h2> Ilmoitukset </h2>
+   {% for notice in notices %}
+    <p>
+      <a href="/notice/{{ notice.id }}">{{ notice.title }}</a> / {{ notice.location }} /   {{ notice.date }} / {{ notice.level }}
+      <br />
+      {{ notice.total }} ilmoittautunutta
+    </p>
+    <hr />
+    {% endfor %}
+    <p>
+      <a href="/{{ page - 1 }}">&lt;&lt;</a>
+      Sivu {{ page }}/{{ page_count }}
+      <a href="/{{ page + 1 }}">&gt;&gt;</a>
+    </p>
+    <hr />
+  </div>
 
 <body>
